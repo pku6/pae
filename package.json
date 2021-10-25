@@ -1,0 +1,18 @@
+{
+  "scripts": {
+    "postinstall": "node dist/init.js",
+    "start": "node dist/main.js"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^16.2.13",
+    "@types/node": "^16.11.5"
+  },
+  "dependencies": {
+    "@ddu6/cli-tools": "^0.0.21",
+    "jsdom": "^18.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=8.0.0"
+  }
+}
