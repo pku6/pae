@@ -217,7 +217,7 @@ async function recognizeVCodeImg(base64Img) {
     const { body } = await post('https://api.ttshitu.com/base64', {
         username: init_1.config.ttshitu.username,
         password: init_1.config.ttshitu.password,
-        typeid: '4',
+        typeid: '7',
         image: base64Img
     }, '', '', init_1.config.recognizeTimeout);
     const { success, message, data } = JSON.parse(body);
