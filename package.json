@@ -8,7 +8,7 @@
     "@types/node": "^16.11.5"
   },
   "dependencies": {
-    "@ddu6/cli-tools": "^0.0.21",
+    "@ddu6/cli-tools": "^0.0.22",
     "jsdom": "^18.0.0"
   },
   "engines": {
