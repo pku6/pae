@@ -29,7 +29,7 @@ export const config = {
     logLevel: 0,
     password: '********',
     proxyDelay: 2,
-    recognizeTimeout: 10,
+    recognizeTimeout: 5,
     refreshInterval: 3,
     requestTimeout: 30,
     sessionDuration: 1800,
