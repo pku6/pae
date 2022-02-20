@@ -369,10 +369,11 @@ function getSession() {
     sessionIndex = (sessionIndex + 1) % (init_1.sessions.others.length + init_1.sessions.main.length);
     const minStart = Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300;
     if (sessionIndex < init_1.sessions.main.length) {
-        const session = init_1.sessions.main[sessionIndex];
+        const mainIndex = sessionIndex;
+        const session = init_1.sessions.main[mainIndex];
         if (!session.renewing && minStart > session.start) {
             session.renewing = true;
-            createMainSession().then(value => init_1.sessions.main[sessionIndex] = value);
+            createMainSession().then(value => init_1.sessions.main[mainIndex] = value);
         }
         return session;
     }
