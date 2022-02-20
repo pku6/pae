@@ -415,7 +415,11 @@ async function main() {
     const courseDescToElecting = new Map();
     while (true) {
         const promises = [];
-        for (let i = 0; i < Math.floor((init_1.sessions.others.length + init_1.sessions.main.length) / 2 / init_1.config.courses.length); i++) {
+        const batchSize = Math.floor((init_1.sessions.others.length + init_1.sessions.main.length) / 2 / init_1.config.courses.length);
+        if (batchSize === 0) {
+            await sleep(init_1.config.refreshInterval);
+        }
+        for (let i = 0; i < batchSize; i++) {
             for (const courseDesc of init_1.config.courses) {
                 if (courseDescToElecting.get(courseDesc)) {
                     continue;
