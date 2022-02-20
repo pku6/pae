@@ -373,6 +373,7 @@ function getSession() {
         const session = init_1.sessions.main[mainIndex];
         if (!session.renewing && minStart > session.start) {
             session.renewing = true;
+            (0, init_1.saveSessions)();
             createMainSession().then(value => init_1.sessions.main[mainIndex] = value);
         }
         return session;
@@ -381,6 +382,7 @@ function getSession() {
     const session = init_1.sessions.others[othersIndex];
     if (!session.renewing && minStart > session.start) {
         session.renewing = true;
+        (0, init_1.saveSessions)();
         createSession().then(value => init_1.sessions.others[othersIndex] = value);
     }
     return session;

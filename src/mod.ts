@@ -380,6 +380,7 @@ function getSession() {
         const session = sessions.main[mainIndex]
         if (!session.renewing && minStart > session.start) {
             session.renewing = true
+            saveSessions()
             createMainSession().then(value => sessions.main[mainIndex] = value)
         }
         return session
@@ -388,6 +389,7 @@ function getSession() {
     const session = sessions.others[othersIndex]
     if (!session.renewing && minStart > session.start) {
         session.renewing = true
+        saveSessions()
         createSession().then(value => sessions.others[othersIndex] = value)
     }
     return session
