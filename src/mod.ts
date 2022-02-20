@@ -426,7 +426,7 @@ export async function main() {
     const courseDescToElecting: Map<CourseDesc, true | undefined> = new Map()
     while (true) {
         const promises: Promise<CourseDesc | undefined>[] = []
-        for (let i = 0; i < Math.floor((sessions.others.length + config.courses.length) / 2 / config.courses.length); i++) {
+        for (let i = 0; i < Math.floor((sessions.others.length + sessions.main.length) / 2 / config.courses.length); i++) {
             for (const courseDesc of config.courses) {
                 if (courseDescToElecting.get(courseDesc)) {
                     continue
