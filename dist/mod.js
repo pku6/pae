@@ -392,25 +392,28 @@ function getMainSession() {
     return init_1.sessions.main[mainSessionIndex++ % init_1.sessions.main.length];
 }
 async function main() {
-    const batchSize = Math.ceil(Math.max(3, init_1.config.proxyDelay + 1) / init_1.config.refreshInterval);
-    const sessionNum = batchSize * init_1.config.courses.length * 2;
+    const sessionNum = Math.ceil(Math.max(3, init_1.config.proxyDelay + 1) / init_1.config.refreshInterval) * init_1.config.courses.length * 2;
     init_1.sessions.main = init_1.sessions.main.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start);
     init_1.sessions.others = init_1.sessions.main.slice(init_1.config.courses.length).concat(init_1.sessions.others.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start)).slice(0, sessionNum - init_1.config.courses.length);
     init_1.sessions.main = init_1.sessions.main.slice(0, init_1.config.courses.length);
     (0, init_1.saveSessions)();
-    for (let i = init_1.sessions.main.length; i < init_1.config.courses.length; i++) {
-        init_1.sessions.main.push(await createMainSession());
-        (0, init_1.saveSessions)();
-    }
-    for (let i = init_1.sessions.others.length + init_1.config.courses.length; i < sessionNum; i++) {
-        init_1.sessions.others.push(await createSession());
-        (0, init_1.saveSessions)();
-    }
+    (async () => {
+        for (let i = init_1.sessions.main.length; i < init_1.config.courses.length; i++) {
+            init_1.sessions.main.push(await createMainSession());
+            (0, init_1.saveSessions)();
+        }
+    })();
+    (async () => {
+        for (let i = init_1.sessions.others.length + init_1.config.courses.length; i < sessionNum; i++) {
+            init_1.sessions.others.push(await createSession());
+            (0, init_1.saveSessions)();
+        }
+    })();
     let lastPromises = [];
     const courseDescToElecting = new Map();
     while (true) {
         const promises = [];
-        for (let i = 0; i < batchSize; i++) {
+        for (let i = 0; i < Math.floor((init_1.sessions.others.length + init_1.config.courses.length) / 2 / init_1.config.courses.length); i++) {
             for (const courseDesc of init_1.config.courses) {
                 if (courseDescToElecting.get(courseDesc)) {
                     continue;

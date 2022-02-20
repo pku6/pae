@@ -399,8 +399,7 @@ function getMainSession() {
     return sessions.main[mainSessionIndex++ % sessions.main.length]
 }
 export async function main() {
-    const batchSize = Math.ceil(Math.max(3, config.proxyDelay + 1) / config.refreshInterval)
-    const sessionNum = batchSize * config.courses.length * 2
+    const sessionNum = Math.ceil(Math.max(3, config.proxyDelay + 1) / config.refreshInterval) * config.courses.length * 2
     sessions.main = sessions.main.filter(
         value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
     )
@@ -408,20 +407,24 @@ export async function main() {
         value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
     )).slice(0, sessionNum - config.courses.length)
     sessions.main = sessions.main.slice(0, config.courses.length)
-    saveSessions()
-    for (let i = sessions.main.length; i < config.courses.length; i++) {
-        sessions.main.push(await createMainSession())
-        saveSessions()
-    }
-    for (let i = sessions.others.length + config.courses.length; i < sessionNum; i++) {
-        sessions.others.push(await createSession())
-        saveSessions()
-    }
+    saveSessions();
+    (async () => {
+        for (let i = sessions.main.length; i < config.courses.length; i++) {
+            sessions.main.push(await createMainSession())
+            saveSessions()
+        }
+    })();
+    (async () => {
+        for (let i = sessions.others.length + config.courses.length; i < sessionNum; i++) {
+            sessions.others.push(await createSession())
+            saveSessions()
+        }
+    })()
     let lastPromises: Promise<CourseDesc | undefined>[] = []
     const courseDescToElecting: Map<CourseDesc, true | undefined> = new Map()
     while (true) {
         const promises: Promise<CourseDesc | undefined>[] = []
-        for (let i = 0; i < batchSize; i++) {
+        for (let i = 0; i < Math.floor((sessions.others.length + config.courses.length) / 2 / config.courses.length); i++) {
             for (const courseDesc of config.courses) {
                 if (courseDescToElecting.get(courseDesc)) {
                     continue
