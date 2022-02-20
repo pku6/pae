@@ -407,6 +407,8 @@ export async function main() {
         value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
     )).slice(0, sessionNum - config.courses.length)
     sessions.main = sessions.main.slice(0, config.courses.length)
+    sessions.main.forEach(value => value.renewing = false)
+    sessions.others.forEach(value => value.renewing = false)
     saveSessions();
     (async () => {
         for (let i = sessions.main.length; i < config.courses.length; i++) {
