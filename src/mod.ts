@@ -97,7 +97,7 @@ async function getElectiveCookie() {
 }
 function htmlToCourseInfoArray(html: string) {
     const ele = Array.from(new JSDOM(html).window.document.body.querySelectorAll('table table>tbody'))
-        .find(val => val.innerHTML.includes('限数/已选'))
+        .find(value => value.innerHTML.includes('限数/已选'))
     if (ele === undefined) {
         return 500
     }
@@ -344,6 +344,7 @@ async function createSession(): Promise<Session> {
                 cookie,
                 start: Date.now() / 1000,
                 courseInfoArray,
+                renewing: false
             }
         }
         await sleep(config.errSleep)
@@ -370,31 +371,21 @@ async function updateSession(session: Session) {
     clit.out('Updated')
     return 200
 }
-async function renewSession(session: Session) {
-    for (let i = 0; i < config.errLimit; i++) {
-        Object.assign(session, await createSession())
-        if (
-            !sessions.main.includes(session)
-            || await verifySession(session.cookie) !== 401
-        ) {
-            saveSessions()
-            return
-        }
-        await sleep(config.errSleep)
-    }
-    throw new Error('Fail to renew session')
-}
 let sessionIndex = -1
-async function getSession() {
+function getSession() {
     sessionIndex = (sessionIndex + 1) % (sessions.others.length + sessions.main.length)
-    let session: Session
+    const minStart = Date.now() / 1000 - config.sessionDuration + Math.random() * 300
     if (sessionIndex < sessions.main.length) {
-        session = sessions.main[sessionIndex]
-    } else {
-        session = sessions.others[sessionIndex - sessions.main.length]
+        const session = sessions.main[sessionIndex]
+        if (!session.renewing && minStart > session.start) {
+            createMainSession().then(value => sessions.main[sessionIndex] = value)
+        }
+        return session
     }
-    if (Date.now() / 1000 - config.sessionDuration + Math.random() * 300 > session.start) {
-        await renewSession(session)
+    const othersIndex = sessionIndex - sessions.main.length
+    const session = sessions.others[othersIndex]
+    if (!session.renewing && minStart > session.start) {
+        createSession().then(value => sessions.others[othersIndex] = value)
     }
     return session
 }
@@ -406,10 +397,10 @@ export async function main() {
     const batchSize = Math.ceil(Math.max(3, config.proxyDelay + 1) / config.refreshInterval)
     const sessionNum = batchSize * config.courses.length * 2
     sessions.main = sessions.main.filter(
-        val => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= val.start
+        value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
     )
     sessions.others = sessions.main.slice(config.courses.length).concat(sessions.others.filter(
-        val => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= val.start
+        value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
     )).slice(0, sessionNum - config.courses.length)
     sessions.main = sessions.main.slice(0, config.courses.length)
     saveSessions()
@@ -431,7 +422,7 @@ export async function main() {
                     continue
                 }
                 promises.push((async () => {
-                    const session = await getSession()
+                    const session = getSession()
                     const courseInfo = getCourseInfo(session, courseDesc)
                     if (courseInfo === undefined) {
                         return courseDesc
@@ -506,8 +497,8 @@ export async function main() {
         }
         const result = await Promise.all(lastPromises)
         lastPromises = promises
-        if (result.find(val => val !== undefined) !== undefined) {
-            config.courses = config.courses.filter(val => !result.includes(val))
+        if (result.find(value => value !== undefined) !== undefined) {
+            config.courses = config.courses.filter(value => !result.includes(value))
             saveConfig()
         }
         if (config.courses.length === 0) {

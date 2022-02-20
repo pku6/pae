@@ -101,7 +101,7 @@ async function getElectiveCookie() {
 }
 function htmlToCourseInfoArray(html) {
     const ele = Array.from(new jsdom_1.JSDOM(html).window.document.body.querySelectorAll('table table>tbody'))
-        .find(val => val.innerHTML.includes('限数/已选'));
+        .find(value => value.innerHTML.includes('限数/已选'));
     if (ele === undefined) {
         return 500;
     }
@@ -337,6 +337,7 @@ async function createSession() {
                 cookie,
                 start: Date.now() / 1000,
                 courseInfoArray,
+                renewing: false
             };
         }
         await sleep(init_1.config.errSleep);
@@ -363,30 +364,21 @@ async function updateSession(session) {
     clit.out('Updated');
     return 200;
 }
-async function renewSession(session) {
-    for (let i = 0; i < init_1.config.errLimit; i++) {
-        Object.assign(session, await createSession());
-        if (!init_1.sessions.main.includes(session)
-            || await verifySession(session.cookie) !== 401) {
-            (0, init_1.saveSessions)();
-            return;
-        }
-        await sleep(init_1.config.errSleep);
-    }
-    throw new Error('Fail to renew session');
-}
 let sessionIndex = -1;
-async function getSession() {
+function getSession() {
     sessionIndex = (sessionIndex + 1) % (init_1.sessions.others.length + init_1.sessions.main.length);
-    let session;
+    const minStart = Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300;
     if (sessionIndex < init_1.sessions.main.length) {
-        session = init_1.sessions.main[sessionIndex];
+        const session = init_1.sessions.main[sessionIndex];
+        if (!session.renewing && minStart > session.start) {
+            createMainSession().then(value => init_1.sessions.main[sessionIndex] = value);
+        }
+        return session;
     }
-    else {
-        session = init_1.sessions.others[sessionIndex - init_1.sessions.main.length];
-    }
-    if (Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 > session.start) {
-        await renewSession(session);
+    const othersIndex = sessionIndex - init_1.sessions.main.length;
+    const session = init_1.sessions.others[othersIndex];
+    if (!session.renewing && minStart > session.start) {
+        createSession().then(value => init_1.sessions.others[othersIndex] = value);
     }
     return session;
 }
@@ -397,8 +389,8 @@ function getMainSession() {
 async function main() {
     const batchSize = Math.ceil(Math.max(3, init_1.config.proxyDelay + 1) / init_1.config.refreshInterval);
     const sessionNum = batchSize * init_1.config.courses.length * 2;
-    init_1.sessions.main = init_1.sessions.main.filter(val => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= val.start);
-    init_1.sessions.others = init_1.sessions.main.slice(init_1.config.courses.length).concat(init_1.sessions.others.filter(val => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= val.start)).slice(0, sessionNum - init_1.config.courses.length);
+    init_1.sessions.main = init_1.sessions.main.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start);
+    init_1.sessions.others = init_1.sessions.main.slice(init_1.config.courses.length).concat(init_1.sessions.others.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start)).slice(0, sessionNum - init_1.config.courses.length);
     init_1.sessions.main = init_1.sessions.main.slice(0, init_1.config.courses.length);
     (0, init_1.saveSessions)();
     for (let i = init_1.sessions.main.length; i < init_1.config.courses.length; i++) {
@@ -419,7 +411,7 @@ async function main() {
                     continue;
                 }
                 promises.push((async () => {
-                    const session = await getSession();
+                    const session = getSession();
                     const courseInfo = getCourseInfo(session, courseDesc);
                     if (courseInfo === undefined) {
                         return courseDesc;
@@ -494,8 +486,8 @@ async function main() {
         }
         const result = await Promise.all(lastPromises);
         lastPromises = promises;
-        if (result.find(val => val !== undefined) !== undefined) {
-            init_1.config.courses = init_1.config.courses.filter(val => !result.includes(val));
+        if (result.find(value => value !== undefined) !== undefined) {
+            init_1.config.courses = init_1.config.courses.filter(value => !result.includes(value));
             (0, init_1.saveConfig)();
         }
         if (init_1.config.courses.length === 0) {

@@ -8,9 +8,9 @@ const path_1 = require("path");
     '../info/election-results/',
     '../info/invalid-html',
     '../info/vcode-imgs/',
-].map(val => (0, path_1.join)(__dirname, val)).forEach(val => {
-    if (!(0, fs_1.existsSync)(val)) {
-        (0, fs_1.mkdirSync)(val);
+].map(value => (0, path_1.join)(__dirname, value)).forEach(value => {
+    if (!(0, fs_1.existsSync)(value)) {
+        (0, fs_1.mkdirSync)(value);
     }
 });
 exports.config = {

@@ -5,9 +5,9 @@ import {join} from 'path'
     '../info/election-results/',
     '../info/invalid-html',
     '../info/vcode-imgs/',
-].map(val => join(__dirname, val)).forEach(val => {
-    if (!existsSync(val)) {
-        mkdirSync(val)
+].map(value => join(__dirname, value)).forEach(value => {
+    if (!existsSync(value)) {
+        mkdirSync(value)
     }
 })
 export const config = {
@@ -52,6 +52,7 @@ export interface Session {
     cookie: string
     start: number
     courseInfoArray: CourseInfo[]
+    renewing: boolean
 }
 export const sessions = {
     main: <Session[]>[],
