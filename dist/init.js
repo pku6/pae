@@ -14,8 +14,7 @@ const path_1 = require("path");
     }
 });
 exports.config = {
-    studentId: '1*000*****',
-    password: '********',
+    congestionSleep: 3,
     courses: [
         {
             title: '普通物理',
@@ -26,21 +25,22 @@ exports.config = {
             title: '逻辑导论'
         }
     ],
+    errLimit: 100,
+    errSleep: 1,
+    getElectedNumProxy: 'http://host',
+    getElectedNumTimeout: 3,
+    logLevel: 0,
+    password: '********',
+    proxyDelay: 2,
+    recognizeTimeout: 5,
+    refreshInterval: 3,
+    requestTimeout: 30,
+    sessionDuration: 1800,
+    studentId: '1*000*****',
     ttshitu: {
         username: '********',
         password: '********'
-    },
-    getElectedNumProxy: 'http://host',
-    proxyDelay: 2,
-    sessionDuration: 1800,
-    refreshInterval: 3,
-    errLimit: 100,
-    errSleep: 1,
-    congestionSleep: 3,
-    requestTimeout: 30,
-    getElectedNumTimeout: 3,
-    recognizeTimeout: 5,
-    logLevel: 0,
+    }
 };
 exports.sessions = {
     main: [],
