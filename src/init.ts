@@ -27,15 +27,15 @@ export const config = {
         username: '********',
         password: '********'
     },
+    refreshInterval: 3,
     congestionSleep: 3,
     errLimit: 100,
     errSleep: 1,
     getElectedNumProxy: 'http://host',
-    getElectedNumTimeout: 3,
+    getElectedNumTimeout: 5,
     logLevel: 0,
     proxyDelay: 2,
     recognizeTimeout: 5,
-    refreshInterval: 3,
     requestTimeout: 30,
     sessionDuration: 1800
 }
