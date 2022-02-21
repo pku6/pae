@@ -1,7 +1,9 @@
 import {join} from 'path'
 import {app, BrowserWindow, ipcMain} from 'electron'
 import {emitter} from './clit'
+import {config, saveConfig} from './init'
 import {main} from './mod'
+const path = join(__dirname, '../config.json')
 function createWindow() {
     const mainWindow = new BrowserWindow({
         autoHideMenuBar: true,
@@ -15,11 +17,13 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../index.html'))
 }
 let started = false
-ipcMain.on('config-saved', () => {
+ipcMain.on('save-config', (e, string: string) => {
     if (started) {
         return
     }
     started = true
+    Object.assign(config, JSON.parse(string))
+    saveConfig()
     main()
 })
 app.whenReady().then(() => {
