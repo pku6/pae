@@ -4,9 +4,9 @@ exports.main = void 0;
 const fs_1 = require("fs");
 const path_1 = require("path");
 const jsdom_1 = require("jsdom");
-const cli_tools_1 = require("@ddu6/cli-tools");
+const clit_1 = require("./clit");
 const init_1 = require("./init");
-const clit = new cli_tools_1.CLIT(__dirname, init_1.config);
+const clit = new clit_1.ECLIT(__dirname, init_1.config);
 async function sleep(time) {
     await new Promise(resolve => {
         setTimeout(resolve, time * 1000);
@@ -159,7 +159,7 @@ async function getCourseInfoArray(cookie) {
             if (array !== 500) {
                 return array;
             }
-            (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/invalid-html/${cli_tools_1.CLIT.getDate()} ${cli_tools_1.CLIT.getTime()}.html`), body);
+            (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/invalid-html/${clit_1.ECLIT.getDate()} ${clit_1.ECLIT.getTime()}.html`), body);
             clit.out('Invalid html');
         }
         catch (err) {
@@ -210,7 +210,7 @@ async function getVCodeImg(cookie) {
         clit.out('Expired');
         return 401;
     }
-    (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/vcode-imgs/${cli_tools_1.CLIT.getDate()} ${cli_tools_1.CLIT.getTime()}.gif`), buffer);
+    (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/vcode-imgs/${clit_1.ECLIT.getDate()} ${clit_1.ECLIT.getTime()}.gif`), buffer);
     return buffer.toString('base64');
 }
 async function recognizeVCodeImg(base64Img) {
@@ -278,7 +278,7 @@ async function verifySession(cookie) {
 async function electCourse(href, cookie) {
     try {
         const { body } = await get(href, {}, cookie, electAndDropURL);
-        (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/election-results/${cli_tools_1.CLIT.getDate()} ${cli_tools_1.CLIT.getTime()}.html`), body);
+        (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/election-results/${clit_1.ECLIT.getDate()} ${clit_1.ECLIT.getTime()}.html`), body);
         if (body.includes('会话超时') || body.includes('超时操作') || body.includes('重新登录')) {
             clit.out('Expired');
             return 401;

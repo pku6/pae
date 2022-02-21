@@ -1,7 +1,7 @@
 import {writeFileSync} from 'fs'
 import {join} from 'path'
 import {JSDOM} from 'jsdom'
-import {CLIT} from '@ddu6/cli-tools'
+import {ECLIT as CLIT} from './clit'
 import {config, CourseInfo, saveConfig, saveSessions, Session, sessions} from './init'
 const clit = new CLIT(__dirname, config)
 async function sleep(time: number) {

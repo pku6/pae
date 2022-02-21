@@ -1,0 +1,12 @@
+@import url(https://cdn.jsdelivr.net/gh/st-org/stui@0.15.9/main.css);
+
+body {
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    height: 100vh;
+}
+
+body>div>div {
+    margin: .5em;
+    white-space: pre-wrap;
+}

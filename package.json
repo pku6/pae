@@ -1,11 +1,13 @@
 {
+  "main": "dist/main.js",
   "scripts": {
     "postinstall": "node dist/init.js",
     "start": "node dist/main.js"
   },
   "devDependencies": {
     "@types/jsdom": "^16.2.13",
-    "@types/node": "^16.11.5"
+    "@types/node": "^16.11.5",
+    "electron": "^17.0.1"
   },
   "dependencies": {
     "@ddu6/cli-tools": "^0.0.22",
