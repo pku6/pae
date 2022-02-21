@@ -408,6 +408,8 @@ export async function main() {
     sessions.main = sessions.main.slice(0, config.courses.length)
     sessions.main.forEach(value => value.renewing = false)
     sessions.others.forEach(value => value.renewing = false)
+    saveSessions()
+    sessions.main.push(await createMainSession())
     saveSessions();
     (async () => {
         for (let i = sessions.main.length; i < config.courses.length; i++) {
