@@ -25,7 +25,14 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "ignore": [
+          "info",
+          "src",
+          "config.json",
+          "sessions.json"
+        ]
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-zip"
