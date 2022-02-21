@@ -1,10 +1,15 @@
 {
+  "name": "pae",
+  "version": "0.0.0",
   "main": "dist/main.js",
   "scripts": {
     "postinstall": "node dist/init.js",
-    "start": "node dist/main.js"
+    "start": "electron-forge start",
+    "make": "electron-forge make"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.63",
+    "@electron-forge/maker-zip": "^6.0.0-beta.63",
     "@types/jsdom": "^16.2.13",
     "@types/node": "^16.11.5",
     "electron": "^17.0.1"
@@ -16,5 +21,15 @@
   "engines": {
     "node": ">=14.0.0",
     "npm": ">=8.0.0"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip"
+        }
+      ]
+    }
   }
 }
