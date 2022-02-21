@@ -28,7 +28,6 @@
       "packagerConfig": {
         "ignore": [
           "info",
-          "src",
           "config.json",
           "sessions.json"
         ]
