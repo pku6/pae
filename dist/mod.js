@@ -398,8 +398,10 @@ async function main() {
     init_1.sessions.main.forEach(value => value.renewing = false);
     init_1.sessions.others.forEach(value => value.renewing = false);
     (0, init_1.saveSessions)();
-    init_1.sessions.main.push(await createMainSession());
-    (0, init_1.saveSessions)();
+    if (init_1.sessions.main.length < init_1.config.courses.length) {
+        init_1.sessions.main.push(await createMainSession());
+        (0, init_1.saveSessions)();
+    }
     (async () => {
         for (let i = init_1.sessions.main.length; i < init_1.config.courses.length; i++) {
             init_1.sessions.main.push(await createMainSession());
