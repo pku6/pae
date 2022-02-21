@@ -1,5 +1,7 @@
 # PKU Auto Elective
 
+- Require a [ttshitu](http://www.ttshitu.com) account with enough money.
+
 ## Option One (with GUI)
 
 Download from [releases](https://github.com/pku6/pae/releases).
@@ -8,7 +10,6 @@ Download from [releases](https://github.com/pku6/pae/releases).
 
 - Require [git](https://git-scm.com).
 - Require [nodejs](https://nodejs.org).
-- Require a [ttshitu](http://www.ttshitu.com) account with enough money.
 
 ### Install
 
