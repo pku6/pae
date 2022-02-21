@@ -16,7 +16,7 @@ cd pae
 npm ci
 ```
 
-Fill in `config.json`. Fields about proxy can be ignored if you do not want to use a proxy.
+Fill in `config.json`. Fields about proxy can be ignored if you do not want to use a proxy. Actually, if your proxy has a high delay, you had better not use it.
 
 ## Start
 ```

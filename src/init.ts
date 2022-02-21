@@ -34,7 +34,7 @@ export const config = {
     getElectedNumProxy: 'http://host',
     getElectedNumTimeout: 5,
     logLevel: 0,
-    proxyDelay: 2,
+    proxyDelay: .5,
     recognizeTimeout: 5,
     requestTimeout: 30,
     sessionDuration: 1800
