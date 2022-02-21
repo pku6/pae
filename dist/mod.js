@@ -160,7 +160,7 @@ async function main() {
                 if (array !== 500) {
                     return array;
                 }
-                (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/invalid-html/${cli_tools_1.CLIT.getDate()} ${cli_tools_1.CLIT.getTime()}.html`), body);
+                (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/invalid-html/${cli_tools_1.CLIT.getDate()}-${cli_tools_1.CLIT.getTime()}.html`), body);
                 clit.out('Invalid html');
             }
             catch (err) {
@@ -211,7 +211,7 @@ async function main() {
             clit.out('Expired');
             return 401;
         }
-        (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/vcode-imgs/${cli_tools_1.CLIT.getDate()} ${cli_tools_1.CLIT.getTime()}.gif`), buffer);
+        (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/vcode-imgs/${cli_tools_1.CLIT.getDate()}-${cli_tools_1.CLIT.getTime()}.gif`), buffer);
         return buffer.toString('base64');
     }
     async function recognizeVCodeImg(base64Img) {
@@ -279,7 +279,7 @@ async function main() {
     async function electCourse(href, cookie) {
         try {
             const { body } = await get(href, {}, cookie, electAndDropURL);
-            (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/election-results/${cli_tools_1.CLIT.getDate()} ${cli_tools_1.CLIT.getTime()}.html`), body);
+            (0, fs_1.writeFileSync)((0, path_1.join)(__dirname, `../info/election-results/${cli_tools_1.CLIT.getDate()}-${cli_tools_1.CLIT.getTime()}.html`), body);
             if (body.includes('会话超时') || body.includes('超时操作') || body.includes('重新登录')) {
                 clit.out('Expired');
                 return 401;

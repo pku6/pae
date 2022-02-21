@@ -160,7 +160,7 @@ export async function main() {
                 if (array !== 500) {
                     return array
                 }
-                writeFileSync(join(__dirname, `../info/invalid-html/${CLIT.getDate()} ${CLIT.getTime()}.html`), body)
+                writeFileSync(join(__dirname, `../info/invalid-html/${CLIT.getDate()}-${CLIT.getTime()}.html`), body)
                 clit.out('Invalid html')
             } catch (err) {
                 if (err instanceof Error) {
@@ -209,7 +209,7 @@ export async function main() {
             clit.out('Expired')
             return 401
         }
-        writeFileSync(join(__dirname, `../info/vcode-imgs/${CLIT.getDate()} ${CLIT.getTime()}.gif`), buffer)
+        writeFileSync(join(__dirname, `../info/vcode-imgs/${CLIT.getDate()}-${CLIT.getTime()}.gif`), buffer)
         return buffer.toString('base64')
     }
     async function recognizeVCodeImg(base64Img: string) {
@@ -276,7 +276,7 @@ export async function main() {
     async function electCourse(href: string, cookie: string) {
         try {
             const {body} = await get(href, {}, cookie, electAndDropURL)
-            writeFileSync(join(__dirname, `../info/election-results/${CLIT.getDate()} ${CLIT.getTime()}.html`), body)
+            writeFileSync(join(__dirname, `../info/election-results/${CLIT.getDate()}-${CLIT.getTime()}.html`), body)
             if (body.includes('会话超时') || body.includes('超时操作') || body.includes('重新登录')) {
                 clit.out('Expired')
                 return 401
