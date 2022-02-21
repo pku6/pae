@@ -21,7 +21,7 @@ async function get(url, params, cookie = '', referer = '', requestTimeout, proxy
         proxy
     });
     if (result === 408) {
-        clit.out('Timeout', 1);
+        clit.out(`Timeout, fail to get ${url}`, 1);
         throw undefined;
     }
     if (typeof result === 'number') {
@@ -38,7 +38,7 @@ async function post(url, form, cookie = '', referer = '', requestTimeout, proxy)
         proxy
     });
     if (result === 408) {
-        clit.out('Timeout', 1);
+        clit.out(`Timeout, fail to post ${url}`, 1);
         throw undefined;
     }
     if (typeof result === 'number') {
