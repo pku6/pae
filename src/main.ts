@@ -3,7 +3,6 @@ import {app, BrowserWindow, ipcMain} from 'electron'
 import {emitter} from './clit'
 import {config, saveConfig} from './init'
 import {main} from './mod'
-const path = join(__dirname, '../config.json')
 function createWindow() {
     const mainWindow = new BrowserWindow({
         autoHideMenuBar: true,

@@ -5,7 +5,6 @@ const electron_1 = require("electron");
 const clit_1 = require("./clit");
 const init_1 = require("./init");
 const mod_1 = require("./mod");
-const path = (0, path_1.join)(__dirname, '../config.json');
 function createWindow() {
     const mainWindow = new electron_1.BrowserWindow({
         autoHideMenuBar: true,
