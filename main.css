@@ -10,3 +10,16 @@ body>div>div {
     margin: .5em;
     white-space: pre-wrap;
 }
+
+body>.warn {
+    align-items: center;
+    background: var(--color-slice);
+    bottom: 0;
+    display: grid;
+    font-size: var(--length-font-title);
+    justify-items: center;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
