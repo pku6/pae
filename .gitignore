@@ -1,6 +1,6 @@
-config.json
 info
 node_modules
 out
-sessions.json
 tmp
+config.json
+sessions.json
