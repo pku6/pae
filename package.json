@@ -27,9 +27,10 @@
     "forge": {
       "packagerConfig": {
         "ignore": [
-          "info",
-          "config.json",
-          "sessions.json"
+          "^info",
+          "^src",
+          "^config.json",
+          "^sessions.json"
         ]
       },
       "makers": [
