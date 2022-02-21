@@ -2,7 +2,7 @@
 
 ## Option One (with GUI)
 
-Download from [releases](https://github.com/xmcp/HEED-GUI/releases).
+Download from [releases](https://github.com/pku6/pae/releases).
 
 ## Option Two (without GUI)
 
