@@ -302,8 +302,7 @@ async function electCourse(href, cookie) {
             || msg.includes('在补退选阶段开始后的约一周开放选课')
             || msg.includes('总学分已经超过规定学分上限')
             || msg.includes('只能选')
-            || msg.includes('只能修')
-            || msg.includes('选课人数已满')) {
+            || msg.includes('只能修')) {
             return 409;
         }
         if (msg.includes('成功')) {

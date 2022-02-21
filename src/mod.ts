@@ -303,7 +303,6 @@ async function electCourse(href: string, cookie: string) {
             || msg.includes('总学分已经超过规定学分上限')
             || msg.includes('只能选')
             || msg.includes('只能修')
-            || msg.includes('选课人数已满')
         ) {
             return 409
         }
