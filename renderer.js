@@ -86,5 +86,7 @@ electronAPI.handleOut(string => {
     if (out.children.length > 1000) {
         out.children[0].remove()
     }
-    line.scrollIntoView()
+    if (out.scrollHeight - out.scrollTop <= 1.5 * out.clientHeight) {
+        line.scrollIntoView()
+    }
 })

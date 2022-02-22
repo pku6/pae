@@ -29,8 +29,10 @@
         "ignore": [
           "^/info",
           "^/src",
-          "^/config.json",
-          "^/sessions.json"
+          "^/tmp",
+          "^/\\.gitignore",
+          "^/config\\.json",
+          "^/sessions\\.json"
         ]
       },
       "makers": [

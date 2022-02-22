@@ -35,7 +35,7 @@ export const config = {
     getElectedNumTimeout: 5,
     logLevel: 0,
     proxyDelay: .5,
-    recognizeTimeout: 10,
+    recognizeTimeout: 30,
     requestTimeout: 30,
     sessionDuration: 1800
 }
