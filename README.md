@@ -12,7 +12,7 @@
 
 - 图形界面版只支持单门课, 下面的命令行版没有这个限制.
 
-## Option Two (without GUI)
+## Option Two (命令行版)
 
 - Require [git](https://git-scm.com).
 - Require [nodejs](https://nodejs.org).
