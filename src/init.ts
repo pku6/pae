@@ -13,12 +13,12 @@ import {join} from 'path'
 export const config = {
     courses: [
         {
-            title: '普通物理',
-            number: 3,
-            department: '数学科学学院'
+            title: '太极拳',
+            number: 2,
+            department: '体育教研部'
         },
         {
-            title: '逻辑导论'
+            title: '非虚构'
         }
     ],
     studentId: '1*000*****',
