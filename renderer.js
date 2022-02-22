@@ -24,7 +24,7 @@ function createNamedStretchedElement(name, content) {
 }
 document.body.append(
     configEle,
-    createNamedStretchedElement('', button)
+    button
 )
 configEle.append(
     createNamedStretchedElement('Course Title', courseTitleInput),

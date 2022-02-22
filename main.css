@@ -6,6 +6,7 @@ body {
     grid-template-rows: 1fr min-content;
     height: 100vh;
     padding: 0 var(--length-gap);
+    padding-bottom: var(--length-gap);
 }
 
 body>pre {
