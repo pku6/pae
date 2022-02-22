@@ -39,6 +39,7 @@ exports.config = {
     logLevel: 0,
     proxyDelay: .5,
     recognizeTimeout: 10,
+    recognizeType: '3',
     requestTimeout: 30,
     sessionDuration: 1800
 };
