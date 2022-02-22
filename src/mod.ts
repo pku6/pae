@@ -3,6 +3,7 @@ import {join} from 'path'
 import {JSDOM} from 'jsdom'
 import {ECLIT as CLIT} from './clit'
 import {config, CourseInfo, saveConfig, saveSessions, Session, sessions} from './init'
+import {env} from './main'
 export async function main() {
     const clit = new CLIT(__dirname, config)
     async function sleep(time: number) {
@@ -429,7 +430,7 @@ export async function main() {
     const courseDescToElecting: Map<CourseDesc, true | undefined> = new Map()
     while (true) {
         const promises: Promise<CourseDesc | undefined>[] = []
-        const batchSize = Math.floor((sessions.others.length + sessions.main.length) / 2 / config.courses.length)
+        const batchSize = env.pause ? 0 : Math.floor((sessions.others.length + sessions.main.length) / 2 / config.courses.length)
         if (batchSize === 0) {
             await sleep(config.refreshInterval)
         }

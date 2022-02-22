@@ -30,6 +30,17 @@ textarea.value = JSON.stringify({
 }, undefined, 4)
 button.textContent = 'Start'
 button.addEventListener('click', () => {
+    if (button.textContent === 'Pause') {
+        alert('Pausing...')
+        button.textContent = 'Continue'
+        electronAPI.pause()
+        return
+    }
+    if (button.textContent === 'Continue') {
+        button.textContent = 'Pause'
+        electronAPI.continue()
+        return
+    }
     try {
         const {
             courses,
@@ -61,9 +72,8 @@ button.addEventListener('click', () => {
             alert('Too small interval!')
             return
         }
-        button.remove()
-        textarea.remove()
-        document.body.append(out)
+        button.textContent = 'Pause'
+        textarea.replaceWith(out)
         electronAPI.saveConfig(JSON.stringify({
             courses,
             studentId,

@@ -6,6 +6,7 @@ const path_1 = require("path");
 const jsdom_1 = require("jsdom");
 const clit_1 = require("./clit");
 const init_1 = require("./init");
+const main_1 = require("./main");
 async function main() {
     const clit = new clit_1.ECLIT(__dirname, init_1.config);
     async function sleep(time) {
@@ -418,7 +419,7 @@ async function main() {
     const courseDescToElecting = new Map();
     while (true) {
         const promises = [];
-        const batchSize = Math.floor((init_1.sessions.others.length + init_1.sessions.main.length) / 2 / init_1.config.courses.length);
+        const batchSize = main_1.env.pause ? 0 : Math.floor((init_1.sessions.others.length + init_1.sessions.main.length) / 2 / init_1.config.courses.length);
         if (batchSize === 0) {
             await sleep(init_1.config.refreshInterval);
         }

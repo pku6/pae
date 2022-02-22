@@ -1,11 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.env = void 0;
 const path_1 = require("path");
 const electron_1 = require("electron");
 const clit_1 = require("./clit");
 const init_1 = require("./init");
 const mod_1 = require("./mod");
 let currentWindow;
+exports.env = {
+    pause: false
+};
 function createWindow() {
     const mainWindow = currentWindow = new electron_1.BrowserWindow({
         autoHideMenuBar: true,
@@ -39,6 +43,12 @@ else {
         Object.assign(init_1.config, JSON.parse(string));
         (0, init_1.saveConfig)();
         (0, mod_1.main)();
+    });
+    electron_1.ipcMain.on('continue', () => {
+        exports.env.pause = false;
+    });
+    electron_1.ipcMain.on('pause', () => {
+        exports.env.pause = true;
     });
     electron_1.app.whenReady().then(() => {
         createWindow();

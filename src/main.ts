@@ -4,6 +4,9 @@ import {emitter} from './clit'
 import {config, saveConfig} from './init'
 import {main} from './mod'
 let currentWindow: BrowserWindow | undefined
+export const env = {
+    pause: false
+}
 function createWindow() {
     const mainWindow = currentWindow = new BrowserWindow({
         autoHideMenuBar: true,
@@ -36,6 +39,12 @@ if (!app.requestSingleInstanceLock()) {
         Object.assign(config, JSON.parse(string))
         saveConfig()
         main()
+    })
+    ipcMain.on('continue', () => {
+        env.pause = false
+    })
+    ipcMain.on('pause', () => {
+        env.pause = true
     })
     app.whenReady().then(() => {
         createWindow()
