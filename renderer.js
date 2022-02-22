@@ -164,7 +164,7 @@ button.addEventListener('click', () => {
     configEle.replaceWith(out)
     electronAPI.saveConfig(JSON.stringify({
         courses,
-        studentId: studentIdInput.value,
+        studentId: document.title = studentIdInput.value,
         password: passwordInput.value,
         ttshitu: {
             username: tusernameInput.value,
