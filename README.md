@@ -1,12 +1,12 @@
 # PKU Auto Elective
 
-- Require a [ttshitu](http://www.ttshitu.com) account with enough money.
+- 需要注册一个 [ttshitu](http://www.ttshitu.com) 账户并进行充值.
 
 - 不支持翻页, 需要待选课程在第一页.
 
 - 不支持双学位.
 
-## Option One (with GUI)
+## Option One (图形界面版)
 
 在 [releases](https://github.com/pku6/pae/releases) 中下载一个合适的 zip 压缩包, 然后解压, 然后找到可执行文件 (windows 平台下是 pae.exe) 点击一下, 然后就有图形界面了, 之后的操作非常简单无需赘述.
 
