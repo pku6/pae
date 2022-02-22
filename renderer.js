@@ -80,13 +80,14 @@ button.addEventListener('click', () => {
     }
 })
 electronAPI.handleOut(string => {
+    const scroll = out.scrollHeight - out.scrollTop < out.clientHeight + 2
     const line = document.createElement('div')
     out.append(line)
     line.textContent = string
     if (out.children.length > 1000) {
         out.children[0].remove()
     }
-    if (out.scrollHeight - out.scrollTop <= 1.5 * out.clientHeight) {
+    if (scroll) {
         line.scrollIntoView()
     }
 })
