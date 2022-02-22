@@ -15,7 +15,6 @@ body>:not(button) {
 
 body>pre>div {
     margin: .5em;
-    white-space: pre-wrap;
 }
 
 body>.warn {
