@@ -1,16 +1,19 @@
 @import url(https://cdn.jsdelivr.net/gh/st-org/stui@0.15.9/main.css);
 
 body {
-    box-sizing: border-box;
     display: grid;
     grid-template-rows: 1fr min-content;
     height: 100vh;
-    padding: 0 var(--length-gap);
-    padding-bottom: var(--length-gap);
+}
+
+body>* {
+    border-radius: 0;
+    margin: 0;
 }
 
 body>:not(button) {
     overflow: auto;
+    padding: 0 var(--length-gap);
 }
 
 body>pre>div {
