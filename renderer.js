@@ -1,8 +1,7 @@
 const warn = document.createElement('div')
 const configEle = document.createElement('div')
-const courseTitleInput = document.createElement('input')
-const courseNumberInput = document.createElement('input')
-const courseDepartmentInput = document.createElement('input')
+const coursesEle = document.createElement('ul')
+const addButton = document.createElement('button')
 const studentIdInput = document.createElement('input')
 const passwordInput = document.createElement('input')
 const tusernameInput = document.createElement('input')
@@ -27,16 +26,14 @@ document.body.append(
     button
 )
 configEle.append(
-    createNamedStretchedElement('Course Title', courseTitleInput),
-    createNamedStretchedElement('Course Number (Optional)', courseNumberInput),
-    createNamedStretchedElement('Course Department (Optional)', courseDepartmentInput),
+    createNamedStretchedElement('Courses to Elect', coursesEle),
+    createNamedStretchedElement('', addButton),
     createNamedStretchedElement('Student Id', studentIdInput),
     createNamedStretchedElement('Password', passwordInput),
     createNamedStretchedElement('TTShiTu Username', tusernameInput),
     createNamedStretchedElement('TTShiTu Password', tpasswordInput),
     createNamedStretchedElement('Refresh Interval', refreshIntervalInput)
 )
-courseNumberInput.type = 'number'
 passwordInput.type = 'password'
 tpasswordInput.type = 'password'
 refreshIntervalInput.step = 'any'
@@ -49,6 +46,43 @@ function alert(string) {
         warn.remove()
     }, 1000)
 }
+const courseInputsArray = []
+function appendCourseElement({title, number, department} = {}) {
+    const element = document.createElement('li')
+    const courseTitleInput = document.createElement('input')
+    const courseNumberInput = document.createElement('input')
+    const courseDepartmentInput = document.createElement('input')
+    const deleteButton = document.createElement('button')
+    coursesEle.append(element)
+    element.append(
+        createNamedStretchedElement('Course Title', courseTitleInput),
+        createNamedStretchedElement('Course Number (Optional)', courseNumberInput),
+        createNamedStretchedElement('Course Department (Optional)', courseDepartmentInput),
+        createNamedStretchedElement('', deleteButton)
+    )
+    const inputs = {
+        courseTitleInput,
+        courseNumberInput,
+        courseDepartmentInput,
+        deleted: false
+    }
+    courseInputsArray.push(inputs)
+    if (typeof title === 'string') {
+        courseTitleInput.value = title
+    }
+    courseNumberInput.type = 'number'
+    if (typeof number === 'number') {
+        courseNumberInput.value = number.toString()
+    }
+    if (typeof department === 'string') {
+        courseDepartmentInput.value = department
+    }
+    deleteButton.textContent = 'Delete'
+    deleteButton.addEventListener('click', () => {
+        inputs.deleted = true
+        element.remove()
+    })
+}
 const {
     courses,
     studentId,
@@ -56,33 +90,31 @@ const {
     ttshitu,
     refreshInterval
 } = JSON.parse(electronAPI.loadConfig())
-if (courses != undefined && courses.length > 0) {
-    const {title, number, department} = courses[0]
-    courseTitleInput.value = title
-    if (number !== undefined) {
-        courseNumberInput.value = number.toString()
-    }
-    if (department !== undefined) {
-        courseDepartmentInput.value = department
-    }
+if (Array.isArray(courses)) {
+    courses.forEach(value => appendCourseElement(value))
 }
-if (studentId !== undefined && studentId !== '1*000*****') {
+if (typeof studentId === 'string' && studentId !== '1*000*****') {
     studentIdInput.value = studentId
 }
-if (password !== undefined && password !== '********') {
+if (typeof password === 'string' && password !== '********') {
     passwordInput.value = password
 }
-if (ttshitu !== undefined) {
-    if (ttshitu.username !== '********') {
-        tusernameInput.value = ttshitu.username
+if (typeof ttshitu === 'object') {
+    const {username, password} = ttshitu
+    if (typeof username === 'string' && username !== '********') {
+        tusernameInput.value = username
     }
-    if (ttshitu.password !== '********') {
-        tpasswordInput.value = ttshitu.password
+    if (typeof password === 'string' && password !== '********') {
+        tpasswordInput.value = password
     }
 }
-if (refreshInterval !== undefined) {
+if (typeof refreshInterval === 'number') {
     refreshIntervalInput.value = refreshInterval.toString()
 }
+addButton.textContent = 'Add Course'
+addButton.addEventListener('click', () => {
+    appendCourseElement()
+})
 button.textContent = 'Start'
 button.addEventListener('click', () => {
     if (button.textContent === 'Pause') {
@@ -96,16 +128,28 @@ button.addEventListener('click', () => {
         electronAPI.continue()
         return
     }
-    const course = {
-        title: courseTitleInput.value
-    }
-    const courseNumber = Number(courseNumberInput.value)
-    const courseDepartment = courseDepartmentInput.value
-    if (isFinite(courseNumber) && courseNumber > 0) {
-        course.number = courseNumber
-    }
-    if (courseDepartment.length > 0) {
-        course.department = courseDepartment
+    const courses = []
+    for (const {
+        courseTitleInput,
+        courseNumberInput,
+        courseDepartmentInput,
+        deleted
+    } of courseInputsArray) {
+        if (deleted) {
+            continue
+        }
+        const course = {
+            title: courseTitleInput.value
+        }
+        const courseNumber = Number(courseNumberInput.value)
+        const courseDepartment = courseDepartmentInput.value
+        if (isFinite(courseNumber) && courseNumber > 0) {
+            course.number = courseNumber
+        }
+        if (courseDepartment.length > 0) {
+            course.department = courseDepartment
+        }
+        courses.push(course)
     }
     const refreshInterval = Number(refreshIntervalInput.value)
     if (!isFinite(refreshInterval)) {
@@ -119,9 +163,7 @@ button.addEventListener('click', () => {
     button.textContent = 'Pause'
     configEle.replaceWith(out)
     electronAPI.saveConfig(JSON.stringify({
-        courses: [
-            course
-        ],
+        courses,
         studentId: studentIdInput.value,
         password: passwordInput.value,
         ttshitu: {

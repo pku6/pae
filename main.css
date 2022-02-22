@@ -9,7 +9,7 @@ body {
     padding-bottom: var(--length-gap);
 }
 
-body>pre {
+body>:not(button) {
     overflow: auto;
 }
 
