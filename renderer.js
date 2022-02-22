@@ -28,8 +28,8 @@ document.body.append(
 )
 configEle.append(
     createNamedStretchedElement('Course Title', courseTitleInput),
-    createNamedStretchedElement('Course Number (optional)', courseNumberInput),
-    createNamedStretchedElement('Course Department (optional)', courseDepartmentInput),
+    createNamedStretchedElement('Course Number (Optional)', courseNumberInput),
+    createNamedStretchedElement('Course Department (Optional)', courseDepartmentInput),
     createNamedStretchedElement('Student Id', studentIdInput),
     createNamedStretchedElement('Password', passwordInput),
     createNamedStretchedElement('TTShiTu Username', tusernameInput),
