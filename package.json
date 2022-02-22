@@ -1,6 +1,6 @@
 {
   "name": "pae",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/main.js",
   "scripts": {
     "postinstall": "node dist/init.js",
