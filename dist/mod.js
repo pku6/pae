@@ -218,7 +218,7 @@ async function main() {
         const { body } = await post('https://api.ttshitu.com/base64', {
             username: init_1.config.ttshitu.username,
             password: init_1.config.ttshitu.password,
-            typeid: '7',
+            typeid: init_1.config.recognizeType,
             image: base64Img
         }, '', '', init_1.config.recognizeTimeout);
         const { success, message, data } = JSON.parse(body);
