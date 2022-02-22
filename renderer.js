@@ -56,7 +56,7 @@ const {
     ttshitu,
     refreshInterval
 } = JSON.parse(electronAPI.loadConfig())
-if (courses.length > 0) {
+if (courses != undefined && courses.length > 0) {
     const {title, number, department} = courses[0]
     courseTitleInput.value = title
     if (number !== undefined) {
@@ -66,19 +66,23 @@ if (courses.length > 0) {
         courseDepartmentInput.value = department
     }
 }
-if (studentId !== '1*000*****') {
+if (studentId !== undefined && studentId !== '1*000*****') {
     studentIdInput.value = studentId
 }
-if (password !== '********') {
+if (password !== undefined && password !== '********') {
     passwordInput.value = password
 }
-if (ttshitu.username !== '********') {
-    tusernameInput.value = ttshitu.username
+if (ttshitu !== undefined) {
+    if (ttshitu.username !== '********') {
+        tusernameInput.value = ttshitu.username
+    }
+    if (ttshitu.password !== '********') {
+        tpasswordInput.value = ttshitu.password
+    }
 }
-if (ttshitu.password !== '********') {
-    tpasswordInput.value = ttshitu.password
+if (refreshInterval !== undefined) {
+    refreshIntervalInput.value = refreshInterval.toString()
 }
-refreshIntervalInput.value = refreshInterval.toString()
 button.textContent = 'Start'
 button.addEventListener('click', () => {
     if (button.textContent === 'Pause') {
