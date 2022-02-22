@@ -336,9 +336,9 @@ async function main() {
                 clit.out('New session');
                 return {
                     cookie,
-                    start: Date.now() / 1000,
                     courseInfoArray,
-                    renewing: false
+                    renewing: false,
+                    start: Date.now() / 1000
                 };
             }
             await sleep(init_1.config.errSleep);
@@ -393,11 +393,18 @@ async function main() {
         return init_1.sessions.main[mainSessionIndex++ % init_1.sessions.main.length];
     }
     const sessionNum = Math.ceil(Math.max(3, init_1.config.proxyDelay + 1) / init_1.config.refreshInterval) * init_1.config.courses.length * 2;
-    init_1.sessions.main = init_1.sessions.main.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start);
-    init_1.sessions.others = init_1.sessions.main.slice(init_1.config.courses.length).concat(init_1.sessions.others.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start)).slice(0, sessionNum - init_1.config.courses.length);
-    init_1.sessions.main = init_1.sessions.main.slice(0, init_1.config.courses.length);
-    init_1.sessions.main.forEach(value => value.renewing = false);
-    init_1.sessions.others.forEach(value => value.renewing = false);
+    if (init_1.sessions.studentId === init_1.config.studentId) {
+        init_1.sessions.main = init_1.sessions.main.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start);
+        init_1.sessions.others = init_1.sessions.main.slice(init_1.config.courses.length).concat(init_1.sessions.others.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start)).slice(0, sessionNum - init_1.config.courses.length);
+        init_1.sessions.main = init_1.sessions.main.slice(0, init_1.config.courses.length);
+        init_1.sessions.main.forEach(value => value.renewing = false);
+        init_1.sessions.others.forEach(value => value.renewing = false);
+    }
+    else {
+        init_1.sessions.main = [];
+        init_1.sessions.others = [];
+        init_1.sessions.studentId = init_1.config.studentId;
+    }
     (0, init_1.saveSessions)();
     if (init_1.sessions.main.length < init_1.config.courses.length) {
         init_1.sessions.main.push(await createMainSession());

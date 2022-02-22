@@ -343,9 +343,9 @@ export async function main() {
                 clit.out('New session')
                 return {
                     cookie,
-                    start: Date.now() / 1000,
                     courseInfoArray,
-                    renewing: false
+                    renewing: false,
+                    start: Date.now() / 1000
                 }
             }
             await sleep(config.errSleep)
@@ -400,15 +400,21 @@ export async function main() {
         return sessions.main[mainSessionIndex++ % sessions.main.length]
     }
     const sessionNum = Math.ceil(Math.max(3, config.proxyDelay + 1) / config.refreshInterval) * config.courses.length * 2
-    sessions.main = sessions.main.filter(
-        value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
-    )
-    sessions.others = sessions.main.slice(config.courses.length).concat(sessions.others.filter(
-        value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
-    )).slice(0, sessionNum - config.courses.length)
-    sessions.main = sessions.main.slice(0, config.courses.length)
-    sessions.main.forEach(value => value.renewing = false)
-    sessions.others.forEach(value => value.renewing = false)
+    if (sessions.studentId === config.studentId) {
+        sessions.main = sessions.main.filter(
+            value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
+        )
+        sessions.others = sessions.main.slice(config.courses.length).concat(sessions.others.filter(
+            value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
+        )).slice(0, sessionNum - config.courses.length)
+        sessions.main = sessions.main.slice(0, config.courses.length)
+        sessions.main.forEach(value => value.renewing = false)
+        sessions.others.forEach(value => value.renewing = false)
+    } else {
+        sessions.main = []
+        sessions.others = []
+        sessions.studentId = config.studentId
+    }
     saveSessions()
     if (sessions.main.length < config.courses.length) {
         sessions.main.push(await createMainSession())

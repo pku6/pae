@@ -45,7 +45,8 @@ exports.config = {
 };
 exports.sessions = {
     main: [],
-    others: []
+    others: [],
+    studentId: ''
 };
 const path0 = (0, path_1.join)(__dirname, '../config.json');
 const path1 = (0, path_1.join)(__dirname, '../sessions.json');
