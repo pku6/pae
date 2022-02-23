@@ -370,6 +370,7 @@ export async function main() {
             return 401
         }
         session.courseInfoArray = result
+        session.lastUpdate = Date.now() / 1000
         saveSessions()
         clit.out('Updated')
         return 200
@@ -418,13 +419,12 @@ export async function main() {
         return sessions.main[mainSessionIndex++ % sessions.main.length]
     }
     const sessionNum = Math.ceil(Math.max(3, config.proxyDelay + 1) / config.refreshInterval) * config.courses.length * 2
+    const minStart = Date.now() / 1000 - config.sessionDuration
     if (sessions.studentId === config.studentId) {
-        sessions.main = sessions.main.filter(
-            value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
-        )
-        sessions.others = sessions.main.slice(config.courses.length).concat(sessions.others.filter(
-            value => Date.now() / 1000 - config.sessionDuration + Math.random() * 300 <= value.start
-        )).slice(0, sessionNum - config.courses.length)
+        sessions.main = sessions.main.filter(value => minStart <= value.start)
+        sessions.others = sessions.main.slice(config.courses.length)
+            .concat(sessions.others.filter(value => minStart <= value.start))
+            .slice(0, sessionNum - config.courses.length)
         sessions.main = sessions.main.slice(0, config.courses.length)
         sessions.main.forEach(value => value.renewing = false)
         sessions.others.forEach(value => value.renewing = false)
@@ -495,11 +495,12 @@ export async function main() {
                         return
                     }
                     const {data} = result
+                    const string = `${data}/${courseInfo.limit} for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`
                     if (data >= courseInfo.limit) {
-                        clit.out(`${data}/${courseInfo.limit} for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`, 2)
+                        clit.out(string, 2)
                         return
                     }
-                    clit.out(`Place avaliable for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`)
+                    clit.out(string)
                     if (courseDescToElecting.get(courseDesc)) {
                         return
                     }
