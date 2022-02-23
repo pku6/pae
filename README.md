@@ -6,7 +6,15 @@
 
 ## Option One (图形界面版)
 
-在 [releases](https://github.com/pku6/pae/releases) 中下载一个合适的 zip 压缩包, 然后解压, 然后找到可执行文件 (windows 平台下是 pae.exe) 点击一下, 然后就有图形界面了, 之后的操作非常简单无需赘述.
+1. 在 [releases](https://github.com/pku6/pae/releases) 中下载一个合适的 zip 压缩包. (以 pae-darwin 开头的是 Mac 平台的.)
+
+2. 然后
+
+    - Windows 平台: 解压 zip 压缩包, 然后找到 pae.exe 并点击.
+
+    - Mac 平台: 把 pae.app 移到 Applications 中, 然后点击它.
+
+3. 然后就有图形界面了, 之后的操作非常简单无需赘述.
 
 ## Option Two (命令行版)
 
