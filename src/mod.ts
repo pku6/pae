@@ -341,11 +341,13 @@ export async function main() {
             const courseInfoArray = await getCourseInfoArray(cookie)
             if (courseInfoArray !== 401) {
                 clit.out('New session')
+                const start = Date.now() / 1000
                 return {
                     cookie,
                     courseInfoArray,
+                    lastUpdate: start,
                     renewing: false,
-                    start: Date.now() / 1000
+                    start
                 }
             }
             await sleep(config.errSleep)
@@ -373,25 +375,41 @@ export async function main() {
         return 200
     }
     let sessionIndex = -1
-    function getSession() {
+    async function getSession() {
         sessionIndex = (sessionIndex + 1) % (sessions.others.length + sessions.main.length)
-        const minStart = Date.now() / 1000 - config.sessionDuration + Math.random() * 300
+        const now = Date.now() / 1000
+        const minStart = now - config.sessionDuration + Math.random() * 300
+        const minLastUpdate = now - config.refreshLimitNumInterval
         if (sessionIndex < sessions.main.length) {
             const mainIndex = sessionIndex
             const session = sessions.main[mainIndex]
+            if (minLastUpdate > session.lastUpdate && await updateSession(session) === 401) {
+                session.start = 0
+                saveSessions()
+            }
             if (!session.renewing && minStart > session.start) {
                 session.renewing = true
                 saveSessions()
-                createMainSession().then(value => sessions.main[mainIndex] = value)
+                createMainSession().then(value => {
+                    sessions.main[mainIndex] = value
+                    saveSessions()
+                })
             }
             return session
         }
         const othersIndex = sessionIndex - sessions.main.length
         const session = sessions.others[othersIndex]
+        if (minLastUpdate > session.lastUpdate && await updateSession(session) === 401) {
+            session.start = 0
+            saveSessions()
+        }
         if (!session.renewing && minStart > session.start) {
             session.renewing = true
             saveSessions()
-            createSession().then(value => sessions.others[othersIndex] = value)
+            createSession().then(value => {
+                sessions.others[othersIndex] = value
+                saveSessions()
+            })
         }
         return session
     }
@@ -446,7 +464,7 @@ export async function main() {
                     continue
                 }
                 promises.push((async () => {
-                    const session = getSession()
+                    const session = await getSession()
                     const courseInfo = getCourseInfo(session, courseDesc)
                     if (courseInfo === undefined) {
                         return courseDesc
@@ -478,7 +496,7 @@ export async function main() {
                     }
                     const {data} = result
                     if (data >= courseInfo.limit) {
-                        clit.out(`No place avaliable for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`, 2)
+                        clit.out(`${data}/${courseInfo.limit} for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`, 2)
                         return
                     }
                     clit.out(`Place avaliable for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`)
