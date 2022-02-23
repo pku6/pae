@@ -28,7 +28,7 @@ export const config = {
         password: '********'
     },
     refreshInterval: 3,
-    refreshLimitNumInterval: 5,
+    refreshLimitNumInterval: 3,
     congestionSleep: 3,
     errLimit: 100,
     errSleep: 1,

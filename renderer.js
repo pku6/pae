@@ -170,7 +170,8 @@ button.addEventListener('click', () => {
             username: tusernameInput.value,
             password: tpasswordInput.value
         },
-        refreshInterval
+        refreshInterval,
+        refreshLimitNumInterval: refreshInterval
     }))
     try {
     } catch (err) {
