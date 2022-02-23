@@ -28,6 +28,7 @@ export const config = {
         password: '********'
     },
     refreshInterval: 3,
+    refreshLimitNumInterval: 3,
     congestionSleep: 3,
     errLimit: 100,
     errSleep: 1,
@@ -52,6 +53,7 @@ export interface CourseInfo {
 export interface Session {
     cookie: string
     courseInfoArray: CourseInfo[]
+    lastUpdate: number
     renewing: boolean
     start: number
 }

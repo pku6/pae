@@ -333,11 +333,13 @@ async function main() {
             const courseInfoArray = await getCourseInfoArray(cookie);
             if (courseInfoArray !== 401) {
                 clit.out('New session');
+                const start = Date.now() / 1000;
                 return {
                     cookie,
                     courseInfoArray,
+                    lastUpdate: start,
                     renewing: false,
-                    start: Date.now() / 1000
+                    start
                 };
             }
             await sleep(init_1.config.errSleep);
@@ -360,30 +362,47 @@ async function main() {
             return 401;
         }
         session.courseInfoArray = result;
+        session.lastUpdate = Date.now() / 1000;
         (0, init_1.saveSessions)();
         clit.out('Updated');
         return 200;
     }
     let sessionIndex = -1;
-    function getSession() {
+    async function getSession() {
         sessionIndex = (sessionIndex + 1) % (init_1.sessions.others.length + init_1.sessions.main.length);
-        const minStart = Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300;
+        const now = Date.now() / 1000;
+        const minStart = now - init_1.config.sessionDuration + Math.random() * 300;
+        const minLastUpdate = now - init_1.config.refreshLimitNumInterval;
         if (sessionIndex < init_1.sessions.main.length) {
             const mainIndex = sessionIndex;
             const session = init_1.sessions.main[mainIndex];
+            if (minLastUpdate > session.lastUpdate && await updateSession(session) === 401) {
+                session.start = 0;
+                (0, init_1.saveSessions)();
+            }
             if (!session.renewing && minStart > session.start) {
                 session.renewing = true;
                 (0, init_1.saveSessions)();
-                createMainSession().then(value => init_1.sessions.main[mainIndex] = value);
+                createMainSession().then(value => {
+                    init_1.sessions.main[mainIndex] = value;
+                    (0, init_1.saveSessions)();
+                });
             }
             return session;
         }
         const othersIndex = sessionIndex - init_1.sessions.main.length;
         const session = init_1.sessions.others[othersIndex];
+        if (minLastUpdate > session.lastUpdate && await updateSession(session) === 401) {
+            session.start = 0;
+            (0, init_1.saveSessions)();
+        }
         if (!session.renewing && minStart > session.start) {
             session.renewing = true;
             (0, init_1.saveSessions)();
-            createSession().then(value => init_1.sessions.others[othersIndex] = value);
+            createSession().then(value => {
+                init_1.sessions.others[othersIndex] = value;
+                (0, init_1.saveSessions)();
+            });
         }
         return session;
     }
@@ -392,9 +411,12 @@ async function main() {
         return init_1.sessions.main[mainSessionIndex++ % init_1.sessions.main.length];
     }
     const sessionNum = Math.ceil(Math.max(3, init_1.config.proxyDelay + 1) / init_1.config.refreshInterval) * init_1.config.courses.length * 2;
+    const minStart = Date.now() / 1000 - init_1.config.sessionDuration;
     if (init_1.sessions.studentId === init_1.config.studentId) {
-        init_1.sessions.main = init_1.sessions.main.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start);
-        init_1.sessions.others = init_1.sessions.main.slice(init_1.config.courses.length).concat(init_1.sessions.others.filter(value => Date.now() / 1000 - init_1.config.sessionDuration + Math.random() * 300 <= value.start)).slice(0, sessionNum - init_1.config.courses.length);
+        init_1.sessions.main = init_1.sessions.main.filter(value => minStart <= value.start);
+        init_1.sessions.others = init_1.sessions.main.slice(init_1.config.courses.length)
+            .concat(init_1.sessions.others.filter(value => minStart <= value.start))
+            .slice(0, sessionNum - init_1.config.courses.length);
         init_1.sessions.main = init_1.sessions.main.slice(0, init_1.config.courses.length);
         init_1.sessions.main.forEach(value => value.renewing = false);
         init_1.sessions.others.forEach(value => value.renewing = false);
@@ -435,7 +457,7 @@ async function main() {
                     continue;
                 }
                 promises.push((async () => {
-                    const session = getSession();
+                    const session = await getSession();
                     const courseInfo = getCourseInfo(session, courseDesc);
                     if (courseInfo === undefined) {
                         return courseDesc;
@@ -466,11 +488,12 @@ async function main() {
                         return;
                     }
                     const { data } = result;
+                    const string = `${data}/${courseInfo.limit} for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`;
                     if (data >= courseInfo.limit) {
-                        clit.out(`No place avaliable for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`, 2);
+                        clit.out(string, 2);
                         return;
                     }
-                    clit.out(`Place avaliable for ${courseInfo.title} ${courseInfo.number} of ${courseInfo.department}`);
+                    clit.out(string);
                     if (courseDescToElecting.get(courseDesc)) {
                         return;
                     }
